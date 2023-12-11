@@ -9,24 +9,22 @@ import java.util.List;
 @Entity
 public class Job extends AbstractEntity {
 
-//   @ManyToMany
-//   private List<Skill> skills; not sure about this
+   @ManyToMany
+   private List<Skill> skills;// not sure about this, is how Carrie did it
 
-    @ManyToMany
-    private List<Skill> skills = new ArrayList<>();
+//    @ManyToMany
+//    private List<Skill> skills = new ArrayList<>();
 
    @ManyToOne
-    Employer employer;
-
-
-    public Job() {
+    private Employer employer;
+   public Job() {
     }
 
     // Initialize the id and value fields.
     public Job(Employer employer, List<Skill> skills) {
         super();
         this.employer = employer;
-//        this.skills = skills;
+        this.skills = skills;
     }
 
     // Getters and setters.
@@ -42,15 +40,14 @@ public class Job extends AbstractEntity {
     }
 
     public List<Skill> getSkills() {
-
-        return skills;
+       return skills;
     }
 
     public void setSkills(List<Skill> skills) {
-        this.skills = skills;
+        this.skills = skills;}
 //    } not sure this is how they want it
-//        public void addSkills(Skill skill){
-//        this.skills.add(skill);
+        public void addSkills(Skill skill){
+        this.skills.add(skill);
         }
 
 }

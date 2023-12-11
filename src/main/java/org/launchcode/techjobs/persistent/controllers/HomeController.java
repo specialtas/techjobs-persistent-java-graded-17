@@ -67,15 +67,17 @@ public class HomeController {
         Employer selectedEmployer = employerResult.get();
         newJob.setEmployer(selectedEmployer);
 
+
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+        newJob.setSkills(skillObjs);
+        newJob.setSkills(skillObjs);
         if (skillObjs == null || skillObjs.isEmpty()) {
             model.addAttribute("title", "No Skills Found");
             return "add";
         }
-        newJob.setSkills(skillObjs);
 
-        Iterable<Integer> skillIds = skills; // Assuming skills is already an Iterable
-        skillRepository.findAllById(skillIds);
+//        Iterable<Integer> skillIds = skills; // Assuming skills is already an Iterable
+//        skillRepository.findAllById(skillIds);
         jobRepository.save(newJob);
 
         return "redirect:/"; // Redirect to the home page or another appropriate route

@@ -2,6 +2,7 @@ package org.launchcode.techjobs.persistent.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -14,9 +15,9 @@ import java.util.List;
 @Entity
 public class Employer extends AbstractEntity {
 
-    @OneToMany(mappedBy = "employer")
-    @JoinColumn(name = "employer_id") // this specifies the column name in the Job table
-    private final List<Job> jobs = new ArrayList<>(); //not sure if this needs to be final
+    @OneToMany()
+    @JoinColumn(name = "employer_id") //this will specify the column name in the job table
+    private List<Job> jobs = new ArrayList<>();
 
     @NotNull(message = "Location is required")
     @Size(max = 100, message = "Location must be less than 100 characters")
