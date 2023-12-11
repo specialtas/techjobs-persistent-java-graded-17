@@ -50,37 +50,34 @@ public class HomeController {
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                    Errors errors, Model model, @RequestParam Integer employerId,
+                                    Errors errors, Model model,
+                                    @RequestParam int employerId,
                                     @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         }
-        Optional<Employer> result = employerRepository.findById(employerId);
-
-        if (result.isPresent()) {
-            Employer selectedEmployer = result.get();
-            newJob.setEmployer(selectedEmployer);// this sets the selected employer for the new job
-
-            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-            newJob.setSkills(skillObjs);
-
-            Optional<List<Skill>> skillsResult = Optional.ofNullable(skillObjs);
-
-            if (skillsResult.isPresent()) {
-                newJob.setSkills(skillsResult.get());
-            } else {
-                // Handle the case where skills are null or empty
-                // This could involve displaying an error message or taking appropriate action
-                model.addAttribute("title", "No Skills Found");
-                return "add";
-            }
-
-            return "redirect:/"; // Redirect to the home page or another appropriate route
-        } else {
+        Optional<Employer> employerResult = employerRepository.findById(employerId);
+        if (employerResult.isEmpty()) {
             model.addAttribute("title", "Invalid Employer ID: " + employerId);
             return "add";
         }
+
+        Employer selectedEmployer = employerResult.get();
+        newJob.setEmployer(selectedEmployer);
+
+        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+        if (skillObjs == null || skillObjs.isEmpty()) {
+            model.addAttribute("title", "No Skills Found");
+            return "add";
+        }
+        newJob.setSkills(skillObjs);
+
+        Iterable<Integer> skillIds = skills; // Assuming skills is already an Iterable
+        skillRepository.findAllById(skillIds);
+        jobRepository.save(newJob);
+
+        return "redirect:/"; // Redirect to the home page or another appropriate route
     }
 }
